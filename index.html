@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="./images/icon.ico" />
+    <link rel="shortcut icon" href="./images/icon.ico" />
+    <link rel="stylesheet" href="./styles.css" />
+    <title>In Loving Memory</title>
+  </head>
+  <body>
+    <header class="hero" aria-label="Memorial photo carousel">
+      <div class="slides">
+        <div class="slide slide-1 active" style="background-image: url('./images/1.jpeg');"></div>
+        <div class="slide slide-2" style="background-image: url('./images/2.jpeg');"></div>
+        <div class="slide slide-3" style="background-image: url('./images/3.jpeg');"></div>
+        <div class="slide slide-4" style="background-image: url('./images/4.jpeg');"></div>
+        <div class="slide slide-5" style="background-image: url('./images/5.jpeg');"></div>
+        <div class="slide slide-6" style="background-image: url('./images/6.jpeg');"></div>
+        <div class="slide slide-7" style="background-image: url('./images/7.jpeg');"></div>
+        <div class="slide slide-8" style="background-image: url('./images/8.jpeg');"></div>
+        <div class="slide slide-9" style="background-image: url('./images/9.jpeg');"></div>
+      </div>
+      </div>
+      <div class="hero-content">
+        <div>
+          <h1>
+            In Loving Memory of
+            <span id="typing-name"></span>
+            <span class="cursor">|</span>
+          </h1>
+          <p>Live. Work. Play!</p>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="message">
+        <div class="container fade-in">
+          <div class="card">
+            <p>
+Our father was someone who naturally brought people together and made a lasting impact on the lives around him.
+
+In honor of him, we created this page to celebrate his life and the many people he touched. For those who have asked how they can support our family during this time, donation options are listed below.
+
+We are incredibly grateful for the love and support surrounding our family.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="donations">
+        <div class="container fade-in">
+          <h2>Ways to Donate</h2>
+          <div class="donation-list">
+            <button
+              class="donation-button"
+              type="button"
+              id="open-zelle-modal"
+            >
+              Donate via Zelle
+            </button>
+
+            <a
+              class="donation-button"
+              href="https://cash.app/$0xphoenix"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Donate via CashApp
+            </a>
+
+           
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      Thank you for remembering and celebrating his life with us.
+    </footer>
+
+    <div
+      class="modal"
+      id="zelle-modal"
+      aria-hidden="true"
+      aria-labelledby="zelle-modal-title"
+      role="dialog"
+    >
+      <div class="modal-card">
+        <button class="modal-close" type="button" id="close-zelle-modal" aria-label="Close">
+          ×
+        </button>
+        <h3 id="zelle-modal-title">Zelle Donation</h3>
+        <p>Scan the image below to donate through Zelle.</p>
+        <img
+  class="modal-image"
+  src="./images/zelle.jpeg"
+  alt="Zelle donation QR code"
+/>
+      </div>
+    </div>
+
+    <script>
+      const names = ["Robert Rabang", "The Dot Connector", "Our Father"];
+      const typingElement = document.getElementById("typing-name");
+      let nameIndex = 0;
+      let charIndex = 0;
+      let deleting = false;
+
+      function typeEffect() {
+        const currentName = names[nameIndex];
+
+        if (!deleting) {
+          typingElement.textContent = currentName.substring(0, charIndex + 1);
+          charIndex++;
+
+          if (charIndex === currentName.length) {
+            deleting = true;
+            setTimeout(typeEffect, 2000);
+            return;
+          }
+        } else {
+          typingElement.textContent = currentName.substring(0, charIndex - 1);
+          charIndex--;
+
+          if (charIndex === 0) {
+            deleting = false;
+            nameIndex = (nameIndex + 1) % names.length;
+          }
+        }
+
+        setTimeout(typeEffect, deleting ? 60 : 100);
+      }
+
+      typeEffect();
+
+      const slides = Array.from(document.querySelectorAll(".slide"));
+      let currentIndex = 0;
+      const intervalMs = 4500;
+
+      setInterval(() => {
+        slides[currentIndex].classList.remove("active");
+        currentIndex = (currentIndex + 1) % slides.length;
+        slides[currentIndex].classList.add("active");
+      }, intervalMs);
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.18 }
+      );
+
+      document
+        .querySelectorAll(".fade-in")
+        .forEach((el) => observer.observe(el));
+
+      const zelleModal = document.getElementById("zelle-modal");
+      const openZelleModal = document.getElementById("open-zelle-modal");
+      const closeZelleModal = document.getElementById("close-zelle-modal");
+
+      function openModal() {
+        zelleModal.classList.add("open");
+        zelleModal.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeModal() {
+        zelleModal.classList.remove("open");
+        zelleModal.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+      }
+
+      openZelleModal.addEventListener("click", openModal);
+      closeZelleModal.addEventListener("click", closeModal);
+
+      zelleModal.addEventListener("click", (e) => {
+        if (e.target === zelleModal) {
+          closeModal();
+        }
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && zelleModal.classList.contains("open")) {
+          closeModal();
+        }
+      });
+    </script>
+  </body>
+</html>
